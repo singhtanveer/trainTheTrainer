@@ -7,8 +7,8 @@
 	<description>hibernate-practice</description>
 
 	<scm>
-		<connection>scm:git:ssh://git@github.com:singhtanveer/trainTheTrainer.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:singhtanveer/trainTheTrainer.git</developerConnection>
+		<connection>scm:git:git@github.com:singhtanveer/trainTheTrainer.git</connection>
+		<developerConnection>scm:git:git@github.com:singhtanveer/trainTheTrainer.git</developerConnection>
 		<url>https://github.com/singhtanveer/trainTheTrainer</url>
 		<tag>v1.0</tag>
 	</scm>
