@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.tanveer</groupId>
 	<artifactId>hibernate</artifactId>
-	<version>1.0</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>Hibernate</name>
 	<description>hibernate-practice</description>
 
@@ -10,7 +10,7 @@
 		<connection>scm:git:git@github.com:singhtanveer/trainTheTrainer.git</connection>
 		<developerConnection>scm:git:git@github.com:singhtanveer/trainTheTrainer.git</developerConnection>
 		<url>https://github.com/singhtanveer/trainTheTrainer</url>
-		<tag>v1.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<repositories>
