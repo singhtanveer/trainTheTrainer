@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 25 April 2011 7:52:33 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+
+	<class name="com.tanveer.association.withXML.oneToOne.Person"
+		table="person" catalog="tanveerDB">
+		<id name="personId" type="java.lang.Integer">
+			<column name="PERSON_ID" />
+			<generator class="identity" />
+		</id>
+		<property name="firstName" type="string">
+			<column name="FIRST_NAME" length="10" not-null="true" unique="false" />
+		</property>
+		<property name="lastName" type="string">
+			<column name="LAST_NAME" length="20" not-null="true" unique="false" />
+		</property>
+	</class>
+
+
+</hibernate-mapping>

@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 25 April 2011 7:52:33 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+
+	<class name="com.tanveer.association.withXML.oneToOne.Person" table="person" catalog="tanveerDB">
+		<id name="personId" type="java.lang.Integer">
+			<column name="PERSON_ID" />
+			<generator class="identity" />
+		</id>
+		<property name="firstName" type="string">
+			<column name="FIRST_NAME" length="10" not-null="true" unique="false" />
+		</property>
+		<property name="lastName" type="string">
+			<column name="LAST_NAME" length="20" not-null="true" unique="false" />
+		</property>
+		<one-to-one name="passport" class="com.tanveer.association.withXML.oneToOne.Passport" cascade="save-update"></one-to-one>
+	</class>
+
+	<class name="com.tanveer.association.withXML.oneToOne.Passport" table="passport" catalog="tanveerDB">
+		<id name="personId" type="java.lang.Integer">
+			<column name="PERSON_ID" />
+			<generator class="foreign">
+				<param name="property">person</param>
+			</generator>
+		</id>
+		<one-to-one name="person" class="com.tanveer.association.withXML.oneToOne.Person" constrained="true"></one-to-one>
+		<property name="passportNo" type="string">
+			<column name="PASSPORT_NO" length="100" not-null="true" />
+		</property>
+		<property name="issueDate" type="date">
+			<column name="ISSUE_DATE" length="10" not-null="false" />
+		</property>
+	</class>
+
+
+	<class name="com.tanveer.association.withXML.oneToMany.State" table="state" catalog="tanveerDB">
+		<meta attribute="class-description">This class contains the state detail.</meta>
+		<id name="stateId" type="java.lang.Integer">
+			<column name="STATE_ID" />
+			<generator class="identity" />
+		</id>
+		<property name="stateName" type="string">
+			<column name="STATE_NAME" length="15" not-null="true" unique="true" />
+		</property>
+		<property name="stateArea" type="java.lang.Float">
+			<column name="STATE_AREA" precision="6" not-null="true"
+				unique="false" />
+		</property>
+		<set name="cities" table="city" inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="STATE_ID" not-null="true" />
+			</key>
+			<one-to-many class="com.tanveer.association.withXML.oneToMany.City" />
+		</set>
+	</class>
+
+	<class name="com.tanveer.association.withXML.oneToMany.City" table="city" catalog="tanveerDB">
+		<id name="cityId" type="java.lang.Integer">
+			<column name="CITY_ID" />
+			<generator class="identity" />
+		</id>
+		<many-to-one name="state" class="com.tanveer.association.withXML.oneToMany.State" fetch="select">
+			<column name="STATE_ID" not-null="true" />
+		</many-to-one>
+		<property name="cityName" type="string">
+			<column name="CITY_NAME" length="10" not-null="true" unique="true" />
+		</property>
+	</class>
+
+	<class name="com.tanveer.association.withXML.manyToMany.Author" table="author" catalog="tanveerDB">
+		<id name="authorId" type="java.lang.Integer">
+			<column name="AUTHOR_ID" />
+			<generator class="identity" />
+		</id>
+		<property name="authorName" type="string">
+			<column name="AUTHOR_NAME" length="20" not-null="true" unique="true" />
+		</property>
+		<set name="books" table="author_book" inverse="false" lazy="true"
+			fetch="select" cascade="all">
+			<key> <column name="AUTHOR_ID" not-null="true" /> </key>
+			<many-to-many entity-name="com.tanveer.association.withXML.manyToMany.Book">
+				<column name="BOOK_ID" not-null="true" />
+			</many-to-many>
+		</set>
+	</class>
+
+	<class name="com.tanveer.association.withXML.manyToMany.Book" table="book" catalog="tanveerDB">
+		<id name="bookId" type="java.lang.Integer">
+			<column name="BOOK_ID" />
+			<generator class="identity" />
+		</id>
+		<property name="bookName" type="string">
+			<column name="BOOK_NAME" length="20" not-null="true" />
+		</property>
+		<set name="authors" table="author_book" inverse="true" lazy="true"
+			fetch="select">
+			<key> <column name="BOOK_ID" not-null="true" /> </key>
+			<many-to-many entity-name="com.tanveer.association.withXML.manyToMany.Author">
+				<column name="AUTHOR_ID" not-null="true" />
+			</many-to-many>
+		</set>
+	</class>
+
+	<class name="com.tanveer.inheritance.withXML.singleTableStrategy.Worker" table="worker" discriminator-value="emp">
+		<id name="workerId">
+			<generator class="increment"></generator>
+		</id>
+
+		<discriminator column="type" type="string"></discriminator>
+		<property name="workerName"></property>
+
+		<subclass name="com.tanveer.inheritance.withXML.singleTableStrategy.FullTime" discriminator-value="Regular">
+			<property name="perks"></property>
+			<property name="hours"></property>
+		</subclass>
+
+		<subclass name="com.tanveer.inheritance.withXML.singleTableStrategy.Contractor" discriminator-value="Consultant">
+			<property name="wages"></property>
+			<property name="hours"></property>
+		</subclass>
+
+		<subclass name="com.tanveer.inheritance.withXML.singleTableStrategy.Intern" discriminator-value="Trainee">
+			<property name="stipend"></property>
+			<property name="hours"></property>
+		</subclass>
+
+	</class>
+
+	<class name="com.tanveer.inheritance.withXML.tablePerClassStrategy.Appliance" table="appliance">
+		<id name="applianceId">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="applianceName"></property>
+
+		<union-subclass name="com.tanveer.inheritance.withXML.tablePerClassStrategy.Television"
+			table="television">
+			<property name="function"></property>
+			<property name="size"></property>
+		</union-subclass>
+
+		<union-subclass name="com.tanveer.inheritance.withXML.tablePerClassStrategy.WaterPurifier" table="waterpurifier">
+			<property name="function"></property>
+			<property name="capacity"></property>
+		</union-subclass>
+	</class>
+
+	<class name="com.tanveer.inheritance.withXML.tablePerConcreteClassStrategy.Furniture" table="furniture">
+		<id name="furnitureId">
+			<generator class="increment"></generator>
+		</id>
+
+		<property name="furnitureName"></property>
+
+		<joined-subclass
+			name="com.tanveer.inheritance.withXML.tablePerConcreteClassStrategy.Table"
+			table="tabble">
+			<key column="fid"></key>
+			<property name="tableType"></property>
+		</joined-subclass>
+
+		<joined-subclass
+			name="com.tanveer.inheritance.withXML.tablePerConcreteClassStrategy.Chair">
+			<key column="fid"></key>
+			<property name="chairType"></property>
+		</joined-subclass>
+	</class>
+
+	<class name="com.tanveer.collections.withXML.bag.Applicant"
+		table="applicant">
+		<meta attribute="class-description">This class contains the applicant detail.</meta>
+		<id name="applicantId" type="int" column="applicant_Id">
+			<generator class="native" />
+		</id>
+		<bag name="certificates" cascade="all" lazy="true">
+			<key column="applicants_Id" />
+			<one-to-many class="com.tanveer.collections.withXML.bag.Certificate" />
+		</bag>
+		<property name="applicantName" type="string" />
+	</class>
+
+	<class name="com.tanveer.collections.withXML.bag.Certificate"
+		table="certificate">
+		<meta attribute="class-description">This class contains the certificate records.</meta>
+		<id name="certificateId" type="int" column="certificate_Id">
+			<generator class="native" />
+		</id>
+		<property name="certificateName" column="certificate_name"
+			type="string" />
+	</class>
+
+	<class name="com.tanveer.collections.withXML.bagOfString.Appartment"
+		table="appartment">
+		<id name="appartmentId">
+			<generator class="increment"></generator>
+		</id>
+		<property name="appartmentName"></property>
+
+		<bag name="rooms" table="rooms">
+			<key column="appartment_Id"></key>
+			<element column="roomName" type="string"></element>
+		</bag>
+
+	</class>
+
+	<class name="com.tanveer.collections.withXML.listOfString.Question">
+		<id name="questionId">
+			<generator class="increment"></generator>
+		</id>
+		<property name="questionName"></property>
+
+		<list name="answers" table="answer">
+			<key column="qid"></key>
+			<index column="indx"></index>
+			<element column="answer" type="string"></element>
+		</list>
+
+	</class>
+
+	<class name="com.tanveer.collections.withXML.mapOfString.Marksheet"
+		table="marksheet">
+		<id name="marksheetId">
+			<generator class="native"></generator>
+		</id>
+		<property name="studentName"></property>
+
+		<map name="subjectMarks" table="subject_Mark" cascade="all">
+			<key column="marksheet_Id"></key>
+			<index column="subject" type="string"></index>
+			<element column="marks" type="string"></element>
+		</map>
+	</class>
+
+	<class name="com.tanveer.collections.withXML.map.Portal" table="portal">
+		<id name="portalId">
+			<generator class="native"></generator>
+		</id>
+		<property name="portalName"></property>
+
+		<map name="users" table="users" cascade="all">
+			<key column="portals_Id"></key>
+			<index column="userName" type="string"></index>
+			<many-to-many class="com.tanveer.collections.withXML.map.Credentials"
+				column="credentialId"></many-to-many>
+			<!-- one-to-many class="com.tanveer.collections.withXML.map.Credentials"></one-to-many -->
+		</map>
+	</class>
+
+	<class name="com.tanveer.collections.withXML.map.Credentials"
+		table="credential">
+		<id name="credentialId">
+			<generator class="native"></generator>
+		</id>
+		<property name="loginId"></property>
+		<property name="password"></property>
+		<property name="secretQuestion"></property>
+		<property name="secretAnswer"></property>
+	</class>
+
+	<class name="com.tanveer.association.withXML.oneToOneUsingManyToOne.Driver" table="driver">
+		<id name="driverId">
+			<generator class="increment"></generator>
+		</id>
+		<property name="driverName"></property>
+		<many-to-one name="license" unique="true" cascade="all"></many-to-one>
+	</class>
+
+	<class name="com.tanveer.association.withXML.oneToOneUsingManyToOne.License" table="license">
+		<id name="licenseId">
+			<generator class="increment"></generator>
+		</id>
+		<property name="issueDate"></property>
+		<property name="licenseNo"></property>
+	</class>
+
+	<class name="com.tanveer.componentMapping.withXML.Car" table="car">
+		<id name="carId">
+			<generator class="increment"></generator>
+		</id>
+		<property name="carName"></property>
+
+		<component name="engine"
+			class="com.tanveer.componentMapping.withXML.Engine">
+			<property name="engineType"></property>
+			<property name="engineCapacity"></property>
+		</component>
+
+	</class>
+
+	<class name="com.tanveer.association.withXML.manyToManyExtraJoinTableColumn.Menu">
+		<id name="menuId" column="MENU_ID" type="java.lang.Integer" length="5">
+			<generator class="identity" />
+		</id>
+		<property name="menuName" column="menu_name" type="java.lang.String" not-null="true" length="100"></property>
+		<set name="menuDishes" table="MENU_DISH" lazy="true" access="field" fetch="select" cascade="all">
+			<key>
+				<column name="MENU_ID" not-null="true" />
+			</key>
+			<one-to-many class="com.tanveer.association.withXML.manyToManyExtraJoinTableColumn.MenuDish" />
+		</set>
+	</class>
+
+	<class name="com.tanveer.association.withXML.manyToManyExtraJoinTableColumn.Dish">
+		<id name="dishId" column="dish_id" type="java.lang.Integer" length="5">
+			<generator class="identity" />
+		</id>
+		<property name="dishName" column="DISH_NAME" type="java.lang.String" not-null="true" length="100"></property>
+		<set name="menuDishes" table="MENU_DISH" lazy="true" access="field" fetch="select" cascade="all">
+			<key>
+				<column name="DISH_ID" not-null="true" />
+			</key>
+			<one-to-many class="com.tanveer.association.withXML.manyToManyExtraJoinTableColumn.MenuDish" />
+		</set>
+	</class>
+	
+	<class name="com.tanveer.association.withXML.manyToManyExtraJoinTableColumn.MenuDish" table="MENU_DISH" batch-size="50" dynamic-update="true">
+		<composite-id name="menuDishId" class="com.tanveer.association.withXML.manyToManyExtraJoinTableColumn.MenuDishId">
+			<key-many-to-one name="menu" class="com.tanveer.association.withXML.manyToManyExtraJoinTableColumn.Menu" column="MENU_ID" />
+        	<key-many-to-one name="dish" class="com.tanveer.association.withXML.manyToManyExtraJoinTableColumn.Dish" column="DISH_ID" />
+    	</composite-id>
+       <property name="quantity" type="int" column="QUANTITY" /> 
+	</class>
+		
+	
+	
+	
+
+</hibernate-mapping>
